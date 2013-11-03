@@ -1,35 +1,11 @@
 <?php
-$tiltle = 'Нова книга';
-include './inc/header.php';
-?>
-<a href="index.php">Списък</a>
+$authors = getAuthors($db);
+if ($authors === false) {
+	echo 'грешка';
+	///TODO
+}
 
-<form method="post" action="add_book.php">
-    Име: <input type="text" name="book_name" />
-
-    <?php
-    $authors = getAuthors($db);
-    if ($authors === false) {
-        echo 'грешка';
-        ///TODO        
-    }
-    ?>
-    <div>Автори:<select name="authors[]" multiple style="width: 200px">
-            <?php
-            foreach ($authors as $row) {
-                echo '<option value="' . $row['author_id'] . '">
-                    ' . $row['author_name'] . '</option>';
-            }
-            ?>
-
-        </select></div>
-    <input type="submit" value="Добави" />    
-
-</form>
-
-<?php
 if ($_POST) {
-
     $book_name = trim($_POST['book_name']);
     if (!isset($_POST['authors'])) {
         $_POST['authors'] = '';
@@ -67,13 +43,13 @@ if ($_POST) {
                 exit;
             }
         }
-        echo 'Книгата е добавена';
-        
+        echo 'Книгата е добавена'; 
     }
 }
-?>
 
+$variables = array(
+		'title'   => 'Добави Книга',
+		'authors' => $authors,
+);
 
-<?php
-include './inc/footer.php';
-?>
+renderPage('add_book_html.php', $variables);
